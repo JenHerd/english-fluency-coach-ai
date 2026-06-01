@@ -13,8 +13,8 @@ from PyQt6.QtGui import QImage
 import threading
 import os
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-TEMP_DIR = os.path.join(PROJECT_ROOT, "temp")
+TEMP_DIR = os.path.abspath(os.path.join(os.getcwd(), 'temp'))
+os.makedirs(TEMP_DIR, exist_ok=True)
 
 class CameraThread(QThread):
     change_pixmap_signal = pyqtSignal(QImage)
@@ -67,10 +67,13 @@ class CameraThread(QThread):
         self.recording = True
 
     def stop_recording(self):
-        self.recording = False
-        if self.out is not None:
-            self.out.release()
-            self.out = None
+        try:
+            self.recording = False
+            if self.out is not None:
+                self.out.release()
+                self.out = None
+        except Exception as e:
+            raise RuntimeError(f"Video saving failed: {e}")
 
     def stop(self):
         """Sets run flag to False and waits for thread to finish"""
@@ -111,15 +114,18 @@ class AudioRecorder:
         self._thread.start()
 
     def stop_recording(self):
-        self.recording = False
-        if self._thread is not None:
-            self._thread.join()
-        
-        duration = 0.0
-        if self.audio_data:
-            # Concatenate chunks and save to file
-            audio_np = np.concatenate(self.audio_data, axis=0)
-            wav_write(self.audio_filename, self.fs, audio_np)
-            duration = len(audio_np) / self.fs
+        try:
+            self.recording = False
+            if self._thread is not None:
+                self._thread.join()
             
-        return duration
+            duration = 0.0
+            if self.audio_data:
+                # Concatenate chunks and save to file
+                audio_np = np.concatenate(self.audio_data, axis=0)
+                wav_write(self.audio_filename, self.fs, audio_np)
+                duration = len(audio_np) / self.fs
+                
+            return duration
+        except Exception as e:
+            raise RuntimeError(f"Audio saving failed: {e}")

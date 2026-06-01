@@ -2,3 +2,6 @@
 temp/
 src/models/history.db
 __pycache__/
+dist/
+build/
+*.spec

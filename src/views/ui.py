@@ -308,35 +308,39 @@ class FluencyCoachMainWindow(QMainWindow):
             self.camera_thread.start_recording()
             self.audio_recorder.start_recording()
         else:
-            # Stop recording
-            self.is_recording = False
-            self.blink_timer.stop()
-            self.status_label.setText("⚫ Standby")
-            self.status_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #888888;")
-            
-            self.record_btn.setText("Start Recording")
-            self.record_btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #0078d4;
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    padding: 10px 20px;
-                    font-size: 14px;
-                    font-weight: bold;
-                }
-                QPushButton:hover {
-                    background-color: #005a9e;
-                }
-            """)
-            self.camera_thread.stop_recording()
-            duration = self.audio_recorder.stop_recording()
-            self.feedback_text.setPlainText("Processing transcription...")
+            try:
+                # Stop recording
+                self.is_recording = False
+                self.blink_timer.stop()
+                self.status_label.setText("⚫ Standby")
+                self.status_label.setStyleSheet("font-size: 14px; font-weight: bold; color: #888888;")
+                
+                self.record_btn.setText("Start Recording")
+                self.record_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #0078d4;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        padding: 10px 20px;
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover {
+                        background-color: #005a9e;
+                    }
+                """)
+                self.camera_thread.stop_recording()
+                duration = self.audio_recorder.stop_recording()
+                self.feedback_text.setPlainText("Processing transcription...")
 
-            # Start transcription
-            self.transcription_thread = TranscriptionThread(self.audio_recorder.audio_filename, duration_seconds=duration)
-            self.transcription_thread.finished_signal.connect(self.on_transcription_finished)
-            self.transcription_thread.start()
+                # Start transcription
+                self.transcription_thread = TranscriptionThread(self.audio_recorder.audio_filename, duration_seconds=duration)
+                self.transcription_thread.finished_signal.connect(self.on_transcription_finished)
+                self.transcription_thread.error_signal.connect(lambda msg: self.show_error_message("Runtime Error", msg))
+                self.transcription_thread.start()
+            except Exception as e:
+                QMessageBox.critical(self, "Stop Recording Crash", str(e))
 
     def on_transcription_finished(self, result_dict):
         """Displays the transcribed text and starts the LLM feedback process."""

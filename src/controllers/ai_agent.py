@@ -11,6 +11,7 @@ import re
 
 class TranscriptionThread(QThread):
     finished_signal = pyqtSignal(dict)
+    error_signal = pyqtSignal(str)
 
     def __init__(self, audio_filepath, duration_seconds=0.0):
         super().__init__()
@@ -52,11 +53,7 @@ class TranscriptionThread(QThread):
                 })
                 
         except Exception as e:
-            self.finished_signal.emit({
-                "text": f"[Error: Transcription failed: {e}]",
-                "wpm": 0.0,
-                "filler_count": 0
-            })
+            self.error_signal.emit(str(e))
 
 import os
 import time

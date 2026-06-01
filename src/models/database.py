@@ -8,7 +8,7 @@ import sqlite3
 import os
 from datetime import datetime
 
-DB_PATH = "history.db"
+DB_PATH = os.path.abspath(os.path.join(os.getcwd(), 'history.db'))
 
 def init_db():
     """Initializes the database and creates the history table if it doesn't exist."""
