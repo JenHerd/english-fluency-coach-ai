@@ -1,7 +1,8 @@
-.env
-temp/
-src/models/history.db
-__pycache__/
 dist/
 build/
 *.spec
+history.db
+temp/
+startup_debug.txt
+crash_log.txt
+__pycache__/
