@@ -36,20 +36,20 @@ A local, privacy-first desktop application designed to help you master impromptu
 1. **Python 3.10+**: Ensure Python is installed on your system.
 2. **Ollama**: Download and install [Ollama](https://ollama.com/).
 3. **Llama 3.2 Model**: Once Ollama is installed, open your terminal and pull the required model:
-   ```bash
-   ollama run llama3.2
-   ```
 
-````
+```bash
+ollama run llama3.2
+```
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone [https://github.com/JenHerd/english-fluency-coach-ai.git](https://github.com/JenHerd/english-fluency-coach-ai.git)
 cd english-fluency-coach-ai
 
-````
+```
 
 2. Create a virtual environment (optional but recommended):
 
