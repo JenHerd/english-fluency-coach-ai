@@ -111,4 +111,4 @@ The codebase strictly follows the **Model-View-Controller (MVC)** design pattern
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
+This project is open-source and available under the [MIT License]([https://www.google.com/search?q=LICENSE](https://github.com/JenHerd/english-fluency-coach-ai?tab=MIT-1-ov-file#)).
